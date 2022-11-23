@@ -33,6 +33,7 @@ end
 RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
   config.include Devise::Test::IntegrationHelpers, type: :request
+  config.include Warden::Test::Helpers
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
@@ -79,5 +80,9 @@ RSpec.configure do |config|
 
   config.before(:each, type: :request, admin: true) do
     host! "admin.example.com"
+  end
+
+  config.before(:each, type: :system, admin: true) do
+    Capybara.app_host = "http://admin.example.localhost"
   end
 end
