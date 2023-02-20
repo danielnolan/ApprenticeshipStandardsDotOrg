@@ -37,3 +37,6 @@
 
 # Ignore spec file to track failures for --only-failures flag
 spec/examples.txt
+
+# Ignore Mac-generated file
+.DS_Store
