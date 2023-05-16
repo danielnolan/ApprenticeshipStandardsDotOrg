@@ -118,3 +118,11 @@
 .pagy-nav.pagination .next {
   margin-left: 15px
 }
+
+.check-box-filter-count {
+  visibility: hidden;
+}
+
+.check-box-filter-count.check-box-filter-count--displayable {
+  visibility: visible;
+}
