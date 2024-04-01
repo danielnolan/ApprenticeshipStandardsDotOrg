@@ -21,6 +21,10 @@ class Scraper::ApprenticeshipBulletinsJob < ApplicationJob
         metadata: {date: row["Date"]}
       )
 
+      # Create a StandardsImport record and one UncategorizedUpload child record.
+      # Have a background job that further processes the UnprocessedUpload
+      # records.
+
       if standards_import.new_record?
         standards_import.save!
 
@@ -41,5 +45,60 @@ class Scraper::ApprenticeshipBulletinsJob < ApplicationJob
         end
       end
     end
+  end
+end
+
+
+class StandardsImport
+  has_many :uploads, polymophic: true # Uncategorized, Imports::Pdf
+end
+class Imports::Uncategorized # Delete this record after transferred to Pdf, Doc, Docx
+  belong_to :standards_import
+  has_attachment :file
+
+  def process
+    # In a background job:
+    # Identify what kind of file it is
+    # Give back an AR class (pdf, docx listing, docx, doc)
+    # Will call .new on that class. Will pass in parent is standards_import and
+    # file = self.file
+    # Will persist that record, and then call "process" method
+  end
+end
+# Schema: Add processed_at on all these tables
+class Imports::Pdf # "SourceFile" (mostly match existing SourceFile schema)
+  # belongs_to parent_id, parent_type - belongs_to a DocxListing or Doc or Docx or StandardsImport
+  has_attachment :file
+  belongs_to :parent # standard_import or docx or doc (polymorphic)
+
+  def process
+    noop
+  end
+end
+class Imports::DocxListing # Bulletin with attachments (will not convert to pdf)
+  # belongs_to standards_import_id
+  has_many :attachments # doc, docx, pdf files
+  has_attachment :file
+
+  def process
+    # Extract attachments and create new UncategorizedUpload files
+  end
+end
+class Import::Doc
+  # belongs_to parent_id, parent_type - StandardsImport, DocxListing
+  has_attachment :file
+  has_one :pdf
+
+  def process
+    # convert to pdf
+  end
+end
+class Import::Docx
+  # belongs_to parent__id, parent_type - DocxListing, StandardsImport
+  has_attachment :file
+  has_one :pdf
+
+  def process
+    # convert to pdf
   end
 end
