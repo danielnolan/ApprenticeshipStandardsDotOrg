@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_04_161634) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_12_004046) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -132,8 +132,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_04_161634) do
     t.jsonb "metadata", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "processed_at", precision: nil
+    t.text "processing_errors"
     t.index ["assignee_id"], name: "index_imports_on_assignee_id"
     t.index ["parent_type", "parent_id"], name: "index_imports_on_parent"
+    t.index ["processed_at"], name: "index_imports_on_processed_at"
   end
 
   create_table "industries", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

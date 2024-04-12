@@ -17,6 +17,12 @@ FactoryBot.define do
     file { Rack::Test::UploadedFile.new(Rails.root.join("spec", "fixtures", "files", "document.docx")) }
   end
 
+  factory :imports_doc, class: Imports::Doc do
+    parent factory: :imports_uncategorized
+    type { "Imports::Doc" }
+    file { Rack::Test::UploadedFile.new(Rails.root.join("spec", "fixtures", "files", "document.doc")) }
+  end
+
   factory :imports_pdf, class: Imports::Pdf do
     parent factory: :imports_uncategorized
     type { "Imports::Pdf" }
