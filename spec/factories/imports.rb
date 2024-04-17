@@ -3,6 +3,22 @@ FactoryBot.define do
     parent factory: :standards_import
     type { "Imports::Uncategorized" }
     file { Rack::Test::UploadedFile.new(Rails.root.join("spec", "fixtures", "files", "pixel1x1.pdf"), "application/pdf") }
+
+    trait :docx_listing do
+      file { Rack::Test::UploadedFile.new(Rails.root.join("spec", "fixtures", "files", "docx_file_attachments.docx")) }
+    end
+
+    trait :docx do
+      file { Rack::Test::UploadedFile.new(Rails.root.join("spec", "fixtures", "files", "document.docx")) }
+    end
+
+    trait :doc do
+      file { Rack::Test::UploadedFile.new(Rails.root.join("spec", "fixtures", "files", "document.doc")) }
+    end
+
+    trait :pdf do
+      file { Rack::Test::UploadedFile.new(Rails.root.join("spec", "fixtures", "files", "pixel1x1.pdf"), "application/pdf") }
+    end
   end
 
   factory :imports_docx_listing, class: Imports::DocxListing do
